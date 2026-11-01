@@ -1,65 +1,65 @@
 # Battery Alert
 
-Εφαρμογή Android που σε ειδοποιεί με ήχο και δόνηση όταν η μπαταρία φτάσει σε όρια που ορίζεις εσύ:
+An Android app that alerts you with sound and vibration when your battery reaches levels you choose:
 
-- **Ειδοποίηση φόρτισης** – όταν η μπαταρία ανέβει στο επιθυμητό ποσοστό (προεπιλογή 80%) ενώ φορτίζει, ώστε να αποσυνδέσεις τον φορτιστή.
-- **Ειδοποίηση χαμηλής μπαταρίας** – όταν η μπαταρία πέσει στο επιθυμητό ποσοστό (προεπιλογή 20%) ενώ δεν φορτίζει, ώστε να συνδέσεις τον φορτιστή.
+- **Charge alert**: fires when the battery rises to your target level (default 80%) while charging, so you know when to unplug.
+- **Low battery alert**: fires when the battery drops to your target level (default 20%) while not charging, so you know when to plug in.
 
-Η διεπαφή της εφαρμογής είναι στα ελληνικά.
+The app's interface is in Greek.
 
-## Λειτουργίες
+## Features
 
-- Ρυθμιζόμενα όρια: φόρτιση 50–100%, χαμηλή μπαταρία 5–50%.
-- Ξεχωριστές ρυθμίσεις για κάθε ειδοποίηση: ενεργοποίηση, ήχος, δόνηση.
-- Επιλογή ήχου από ήχους ειδοποιήσεων, κλήσης, ξυπνητηριού ή από οποιοδήποτε αρχείο ήχου (MP3, OGG, …). Υπάρχει και επιλογή «Χωρίς ήχο».
-- Προαιρετική αναπαραγωγή στο κανάλι του ξυπνητηριού, ώστε να ακούγεται ακόμα και στο αθόρυβο.
-- Σεβασμός του «Μην ενοχλείτε» όταν δεν χρησιμοποιείται το κανάλι ξυπνητηριού.
-- Ο ήχος σταματά μόνος του μετά από 30 δευτερόλεπτα, με το κουμπί «Σίγαση» ή όταν αποσυνδέσεις τον φορτιστή.
-- Κάθε ειδοποίηση εκπέμπεται μία φορά ανά φόρτιση ή αποφόρτιση, χωρίς επαναλήψεις, ακόμα και αν επανεκκινηθεί η υπηρεσία.
-- Εμφάνιση επιπέδου μπαταρίας, τύπου σύνδεσης (φορτιστής, USB, ασύρματη, βάση) και θερμοκρασίας.
-- Αυτόματη επανεκκίνηση της παρακολούθησης μετά από επανεκκίνηση της συσκευής ή ενημέρωση της εφαρμογής.
-- Οδηγός ρυθμίσεων για το HyperOS (Xiaomi), που κλείνει τις εφαρμογές στο παρασκήνιο: αυτόματη εκκίνηση και εξαίρεση από τους περιορισμούς μπαταρίας.
-- Φωτεινό και σκούρο θέμα.
+- Adjustable thresholds: charge 50–100%, low battery 5–50%.
+- Separate settings for each alert: enable/disable, sound, vibration.
+- Sound picker with system notification, ringtone and alarm sounds, any audio file (MP3, OGG, …), or no sound.
+- Optional playback on the alarm stream, so alerts are heard even in silent mode.
+- Respects Do Not Disturb when the alarm stream is not used.
+- Sound stops after 30 seconds, when you tap "Mute", or when you unplug the charger.
+- Each alert fires once per charge or discharge cycle, even if the service restarts.
+- Shows battery level, power source (charger, USB, wireless, dock) and temperature.
+- Monitoring restarts automatically after a reboot or an app update.
+- Setup guide for HyperOS (Xiaomi), which aggressively kills background apps: auto-start and battery restriction exemption.
+- Light and dark themes.
 
-## Πώς λειτουργεί
+## How it works
 
-Το `ACTION_BATTERY_CHANGED` δεν μπορεί να ληφθεί μέσω του manifest, οπότε η εφαρμογή τρέχει μια **foreground service** (`BatteryMonitorService`) με δυναμικά εγγεγραμμένο receiver. Η υπηρεσία ελέγχει κάθε αλλαγή της μπαταρίας με τα όρια που έχεις ορίσει και ειδοποιεί μέσω `AlertSound`.
+`ACTION_BATTERY_CHANGED` can't be received through the manifest, so the app runs a **foreground service** (`BatteryMonitorService`) with a dynamically registered receiver. The service checks every battery change against your thresholds and triggers the alert via `AlertSound`.
 
-Ο ήχος παίζεται από την ίδια την εφαρμογή (`MediaPlayer`) και όχι από το notification channel, γιατί ο ήχος ενός channel δεν αλλάζει μετά τη δημιουργία του και δεν μπορεί να παίξει αρχεία από τον αποθηκευτικό χώρο.
+Sounds are played by the app itself (`MediaPlayer`) rather than by the notification channel, because a channel's sound can't be changed after creation and can't play files picked from storage.
 
-| Αρχείο | Ρόλος |
+| File | Role |
 |---|---|
-| `MainActivity.kt` | Κύρια οθόνη και ρυθμίσεις (Jetpack Compose) |
-| `BatteryMonitorService.kt` | Foreground service που παρακολουθεί την μπαταρία και εκπέμπει τις ειδοποιήσεις |
-| `AlertPrefs.kt` | Αποθήκευση ρυθμίσεων (`SharedPreferences`) |
-| `AlertSound.kt` | Ήχος και δόνηση |
-| `Notifications.kt` | Κανάλια και ειδοποιήσεις |
-| `Receivers.kt` | `BootReceiver` και `StopSoundReceiver` |
-| `BatteryInfo.kt` | Ανάγνωση της κατάστασης της μπαταρίας |
-| `ui/` | Θέμα και components |
+| `MainActivity.kt` | Main screen and settings (Jetpack Compose) |
+| `BatteryMonitorService.kt` | Foreground service that watches the battery and fires alerts |
+| `AlertPrefs.kt` | Settings storage (`SharedPreferences`) |
+| `AlertSound.kt` | Sound and vibration |
+| `Notifications.kt` | Notification channels and notifications |
+| `Receivers.kt` | `BootReceiver` and `StopSoundReceiver` |
+| `BatteryInfo.kt` | Battery state parsing |
+| `ui/` | Theme and components |
 
-## Δικαιώματα
+## Permissions
 
-| Δικαίωμα | Σκοπός |
+| Permission | Purpose |
 |---|---|
-| `POST_NOTIFICATIONS` | Εμφάνιση ειδοποιήσεων |
-| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE` | Συνεχής παρακολούθηση της μπαταρίας |
-| `RECEIVE_BOOT_COMPLETED` | Επανεκκίνηση της παρακολούθησης μετά το boot |
-| `VIBRATE` | Δόνηση στις ειδοποιήσεις |
-| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Εξαίρεση από τους περιορισμούς μπαταρίας |
+| `POST_NOTIFICATIONS` | Show notifications |
+| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE` | Continuous battery monitoring |
+| `RECEIVE_BOOT_COMPLETED` | Restart monitoring after boot |
+| `VIBRATE` | Vibrate on alerts |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Exemption from battery restrictions |
 
-Η εφαρμογή δεν έχει πρόσβαση στο διαδίκτυο και δεν συλλέγει δεδομένα.
+The app has no internet access and collects no data.
 
-## Απαιτήσεις
+## Requirements
 
-- Android 12 (API 31) ή νεότερο
-- Για build: JDK 17 και Android SDK 35
+- Android 12 (API 31) or newer
+- To build: JDK 17 and Android SDK 35
 
-## Εγκατάσταση
+## Installation
 
-Κατέβασε το `BatteryAlert.apk` από τη σελίδα [Releases](../../releases/latest) και εγκατάστησέ το στη συσκευή σου. Μπορεί να χρειαστεί να επιτρέψεις την εγκατάσταση από άγνωστες πηγές.
+Download `BatteryAlert.apk` from the [latest release](../../releases/latest) and install it on your device. You may need to allow installs from unknown sources.
 
-Το APK είναι υπογεγραμμένο με το debug κλειδί, ώστε να εγκαθίσταται απευθείας.
+The APK is signed with the debug key so it can be sideloaded directly.
 
 ## Build
 
@@ -67,8 +67,8 @@
 ./gradlew assembleRelease
 ```
 
-Το APK δημιουργείται στο `app/build/outputs/apk/release/`. Χρειάζεται αρχείο `local.properties` με το `sdk.dir` που δείχνει στο Android SDK σου (δημιουργείται αυτόματα από το Android Studio).
+The APK is generated in `app/build/outputs/apk/release/`. You need a `local.properties` file with `sdk.dir` pointing to your Android SDK (Android Studio creates it automatically).
 
-## Τεχνολογίες
+## Built with
 
 Kotlin, Jetpack Compose, Material 3, Gradle (Kotlin DSL).

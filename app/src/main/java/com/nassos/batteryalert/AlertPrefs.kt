@@ -26,7 +26,8 @@ data class AlertConfig(
 }
 
 class AlertPrefs(context: Context) {
-    private val sp = context.applicationContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
+    // applicationContext can still be null while an Activity or Service attaches its base context.
+    private val sp = (context.applicationContext ?: context).getSharedPreferences("settings", Context.MODE_PRIVATE)
 
     var monitoring: Boolean
         get() = sp.getBoolean("monitoring", false)
@@ -36,6 +37,11 @@ class AlertPrefs(context: Context) {
     var useAlarmStream: Boolean
         get() = sp.getBoolean("alarm_stream", false)
         set(value) = sp.edit { putBoolean("alarm_stream", value) }
+
+    /** App language tag ("el" / "en"), or null to follow the system language. */
+    var language: String?
+        get() = sp.getString("language", null)
+        set(value) = sp.edit { putString("language", value) }
 
     fun config(kind: AlertKind) = AlertConfig(
         enabled = sp.getBoolean("${kind.key}_enabled", true),

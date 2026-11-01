@@ -25,6 +25,10 @@ class BatteryMonitorService : Service() {
         override fun onReceive(context: Context, intent: Intent) = onBattery(BatteryInfo.from(intent))
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(AppLanguage.wrap(newBase))
+    }
+
     override fun onCreate() {
         super.onCreate()
         prefs = AlertPrefs(this)

@@ -1,4 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Battery Alert</string>
+    <string name="app_name" translatable="false">Battery Alert</string>
+    <string name="app_subtitle">Battery level alerts</string>
+
+    <string name="lang_el" translatable="false">Ελληνικά</string>
+    <string name="lang_en" translatable="false">English</string>
+
+    <string name="charging">Charging</string>
+    <string name="on_battery">On battery</string>
+    <string name="full">Full</string>
+    <string name="plug_ac">Charger</string>
+    <string name="plug_usb">USB</string>
+    <string name="plug_wireless">Wireless</string>
+    <string name="plug_dock">Dock</string>
+    <string name="plug_none">Battery</string>
+
+    <string name="monitoring_on">Monitoring is on</string>
+    <string name="monitoring_off">Monitoring is off</string>
+    <string name="monitoring_on_desc">You\'ll be alerted when the battery reaches your limits</string>
+    <string name="monitoring_off_desc">Tap to start</string>
+
+    <string name="notifications_off_title">Notifications are turned off</string>
+    <string name="notifications_off_text">Without them the app can\'t alert you.</string>
+    <string name="enable">Turn on</string>
+
+    <string name="section_alerts">Alerts</string>
+    <string name="section_sound">Sound</string>
+    <string name="section_language">Language</string>
+    <string name="section_hyperos">Reliable operation (HyperOS)</string>
+
+    <string name="alert_charge_title">While charging</string>
+    <string name="alert_low_title">Unplugged</string>
+    <string name="alert_charge_desc">Alert when it reaches %1$d%%</string>
+    <string name="alert_low_desc">Alert when it drops to %1$d%%</string>
+    <string name="threshold">Threshold</string>
+    <string name="alert_sound">Alert sound</string>
+    <string name="test_sound">Test sound</string>
+    <string name="vibration">Vibration</string>
+
+    <string name="alarm_volume">Alarm volume</string>
+    <string name="alarm_volume_desc">Alerts play at alarm volume, even in silent mode.</string>
+
+    <string name="sound_charge">Charging sound</string>
+    <string name="sound_low">Low battery sound</string>
+    <string name="sounds_notification">Notification sounds</string>
+    <string name="sounds_alarm">Alarm sounds</string>
+    <string name="sounds_ringtone">Ringtones</string>
+    <string name="sound_from_file">From file…</string>
+    <string name="sound_from_file_desc">Any audio file (MP3, OGG, …)</string>
+    <string name="sound_default">System default</string>
+    <string name="sound_none">No sound</string>
+    <string name="sound_custom">Custom sound</string>
+
+    <string name="hyperos_info">HyperOS closes apps in the background. Set these two options once.</string>
+    <string name="autostart">Autostart</string>
+    <string name="autostart_desc">Enable Battery Alert</string>
+    <string name="unrestricted">No battery restrictions</string>
+    <string name="unrestricted_on">Enabled</string>
+    <string name="unrestricted_off">Choose \"Allow\"</string>
+
+    <string name="channel_monitor">Battery monitoring</string>
+    <string name="channel_monitor_desc">Persistent notification while monitoring is running</string>
+    <string name="channel_alerts">Battery alerts</string>
+    <string name="channel_alerts_desc">Alerts when the battery reaches the limits you set</string>
+    <string name="monitor_title">Battery %1$d%%</string>
+    <string name="monitor_charging_target">Charging · alert at %1$d%%</string>
+    <string name="monitor_battery_target">On battery · alert at %1$d%%</string>
+    <string name="notif_charge_title">Battery reached %1$d%%</string>
+    <string name="notif_charge_text">You can unplug the charger.</string>
+    <string name="notif_low_title">Low battery: %1$d%%</string>
+    <string name="notif_low_text">Plug in the charger.</string>
+    <string name="mute">Mute</string>
 </resources>

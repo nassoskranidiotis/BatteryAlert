@@ -2,6 +2,7 @@ package com.nassos.batteryalert
 
 import android.content.Intent
 import android.os.BatteryManager
+import androidx.annotation.StringRes
 
 data class BatteryInfo(
     val level: Int,
@@ -11,13 +12,14 @@ data class BatteryInfo(
 ) {
     val plugged get() = plugType != 0
 
+    @get:StringRes
     val plugLabel
         get() = when (plugType) {
-            BatteryManager.BATTERY_PLUGGED_AC -> "Φορτιστής"
-            BatteryManager.BATTERY_PLUGGED_USB -> "USB"
-            BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Ασύρματη"
-            BatteryManager.BATTERY_PLUGGED_DOCK -> "Βάση"
-            else -> "Μπαταρία"
+            BatteryManager.BATTERY_PLUGGED_AC -> R.string.plug_ac
+            BatteryManager.BATTERY_PLUGGED_USB -> R.string.plug_usb
+            BatteryManager.BATTERY_PLUGGED_WIRELESS -> R.string.plug_wireless
+            BatteryManager.BATTERY_PLUGGED_DOCK -> R.string.plug_dock
+            else -> R.string.plug_none
         }
 
     companion object {

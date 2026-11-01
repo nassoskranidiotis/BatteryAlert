@@ -5,7 +5,7 @@ An Android app that alerts you with sound and vibration when your battery reache
 - **Charge alert**: fires when the battery rises to your target level (default 80%) while charging, so you know when to unplug.
 - **Low battery alert**: fires when the battery drops to your target level (default 20%) while not charging, so you know when to plug in.
 
-The app's interface is in Greek.
+The app is available in English and Greek.
 
 ## Features
 
@@ -19,6 +19,7 @@ The app's interface is in Greek.
 - Shows battery level, power source (charger, USB, wireless, dock) and temperature.
 - Monitoring restarts automatically after a reboot or an app update.
 - Setup guide for HyperOS (Xiaomi), which aggressively kills background apps: auto-start and battery restriction exemption.
+- In-app language selection (English or Greek). Until you choose, the app follows the system language, falling back to English.
 - Light and dark themes.
 
 ## How it works
@@ -32,6 +33,7 @@ Sounds are played by the app itself (`MediaPlayer`) rather than by the notificat
 | `MainActivity.kt` | Main screen and settings (Jetpack Compose) |
 | `BatteryMonitorService.kt` | Foreground service that watches the battery and fires alerts |
 | `AlertPrefs.kt` | Settings storage (`SharedPreferences`) |
+| `AppLanguage.kt` | Applies the chosen language to the Activity and the Service |
 | `AlertSound.kt` | Sound and vibration |
 | `Notifications.kt` | Notification channels and notifications |
 | `Receivers.kt` | `BootReceiver` and `StopSoundReceiver` |

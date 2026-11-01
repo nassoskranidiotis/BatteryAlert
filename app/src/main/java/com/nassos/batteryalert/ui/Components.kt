@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nassos.batteryalert.AlertConfig
@@ -108,7 +109,7 @@ fun BatteryGauge(level: Int, plugged: Boolean, markers: List<Int>, modifier: Mod
             )
             Text("$level%", style = MaterialTheme.typography.displayLarge, color = MaterialTheme.colorScheme.onSurface)
             Text(
-                if (plugged) "Φορτίζει" else "Σε μπαταρία",
+                stringResource(if (plugged) R.string.charging else R.string.on_battery),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -161,10 +162,12 @@ fun AlertCard(
                     if (isCharge) scheme.onPrimaryContainer else scheme.onErrorContainer,
                 )
                 Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
-                    Text(if (isCharge) "Κατά τη φόρτιση" else "Χωρίς φορτιστή", style = MaterialTheme.typography.titleMedium)
                     Text(
-                        if (isCharge) "Ειδοποίηση όταν φτάσει το ${config.target}%"
-                        else "Ειδοποίηση όταν πέσει στο ${config.target}%",
+                        stringResource(if (isCharge) R.string.alert_charge_title else R.string.alert_low_title),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Text(
+                        stringResource(if (isCharge) R.string.alert_charge_desc else R.string.alert_low_desc, config.target),
                         style = MaterialTheme.typography.bodyMedium,
                         color = scheme.onSurfaceVariant,
                     )
@@ -180,7 +183,7 @@ fun AlertCard(
                 Column {
                     Spacer(Modifier.height(20.dp))
                     Row(verticalAlignment = Alignment.Bottom) {
-                        Text("Όριο", style = MaterialTheme.typography.labelLarge, color = scheme.onSurfaceVariant)
+                        Text(stringResource(R.string.threshold), style = MaterialTheme.typography.labelLarge, color = scheme.onSurfaceVariant)
                         Spacer(Modifier.weight(1f))
                         Text(
                             "${config.target}%",
@@ -211,18 +214,18 @@ fun AlertCard(
                         Row(Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                             Icon(painterResource(R.drawable.ic_music), null, tint = scheme.primary)
                             Column(Modifier.weight(1f).padding(horizontal = 14.dp)) {
-                                Text("Ήχος ειδοποίησης", style = MaterialTheme.typography.labelMedium, color = scheme.onSurfaceVariant)
+                                Text(stringResource(R.string.alert_sound), style = MaterialTheme.typography.labelMedium, color = scheme.onSurfaceVariant)
                                 Text(soundTitle, style = MaterialTheme.typography.bodyLarge, maxLines = 1)
                             }
                             FilledTonalIconButton(onClick = onTestSound, enabled = config.sound != "") {
-                                Icon(Icons.Default.PlayArrow, "Δοκιμή ήχου")
+                                Icon(Icons.Default.PlayArrow, stringResource(R.string.test_sound))
                             }
                         }
                     }
 
                     Spacer(Modifier.height(8.dp))
                     Row(Modifier.padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text("Δόνηση", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                        Text(stringResource(R.string.vibration), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
                         Switch(config.vibrate, { onChange(config.copy(vibrate = it)); onCommit() })
                     }
                 }

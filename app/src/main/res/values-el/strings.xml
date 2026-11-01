@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_subtitle">Ειδοποιήσεις επιπέδου μπαταρίας</string>
+
+    <string name="charging">Φορτίζει</string>
+    <string name="on_battery">Σε μπαταρία</string>
+    <string name="full">Πλήρης</string>
+    <string name="plug_ac">Φορτιστής</string>
+    <string name="plug_usb">USB</string>
+    <string name="plug_wireless">Ασύρματη</string>
+    <string name="plug_dock">Βάση</string>
+    <string name="plug_none">Μπαταρία</string>
+
+    <string name="monitoring_on">Η παρακολούθηση είναι ενεργή</string>
+    <string name="monitoring_off">Η παρακολούθηση είναι ανενεργή</string>
+    <string name="monitoring_on_desc">Θα ειδοποιηθείς όταν η μπαταρία φτάσει στα όρια</string>
+    <string name="monitoring_off_desc">Πάτησε για να ξεκινήσει</string>
+
+    <string name="notifications_off_title">Οι ειδοποιήσεις είναι απενεργοποιημένες</string>
+    <string name="notifications_off_text">Χωρίς αυτές η εφαρμογή δεν μπορεί να σε ειδοποιήσει.</string>
+    <string name="enable">Ενεργοποίηση</string>
+
+    <string name="section_alerts">Ειδοποιήσεις</string>
+    <string name="section_sound">Ήχος</string>
+    <string name="section_language">Γλώσσα</string>
+    <string name="section_hyperos">Αξιόπιστη λειτουργία (HyperOS)</string>
+
+    <string name="alert_charge_title">Κατά τη φόρτιση</string>
+    <string name="alert_low_title">Χωρίς φορτιστή</string>
+    <string name="alert_charge_desc">Ειδοποίηση όταν φτάσει το %1$d%%</string>
+    <string name="alert_low_desc">Ειδοποίηση όταν πέσει στο %1$d%%</string>
+    <string name="threshold">Όριο</string>
+    <string name="alert_sound">Ήχος ειδοποίησης</string>
+    <string name="test_sound">Δοκιμή ήχου</string>
+    <string name="vibration">Δόνηση</string>
+
+    <string name="alarm_volume">Ένταση ξυπνητηριού</string>
+    <string name="alarm_volume_desc">Οι ειδοποιήσεις ακούγονται με την ένταση του ξυπνητηριού, ακόμα και στο αθόρυβο.</string>
+
+    <string name="sound_charge">Ήχος φόρτισης</string>
+    <string name="sound_low">Ήχος χαμηλής μπαταρίας</string>
+    <string name="sounds_notification">Ήχοι ειδοποιήσεων</string>
+    <string name="sounds_alarm">Ήχοι ξυπνητηριού</string>
+    <string name="sounds_ringtone">Ήχοι κλήσης</string>
+    <string name="sound_from_file">Από αρχείο…</string>
+    <string name="sound_from_file_desc">Οποιοδήποτε αρχείο ήχου (MP3, OGG, …)</string>
+    <string name="sound_default">Προεπιλογή συστήματος</string>
+    <string name="sound_none">Χωρίς ήχο</string>
+    <string name="sound_custom">Προσαρμοσμένος ήχος</string>
+
+    <string name="hyperos_info">Το HyperOS κλείνει τις εφαρμογές στο παρασκήνιο. Κάνε αυτές τις δύο ρυθμίσεις μία φορά.</string>
+    <string name="autostart">Αυτόματη εκκίνηση</string>
+    <string name="autostart_desc">Ενεργοποίησε το Battery Alert</string>
+    <string name="unrestricted">Χωρίς περιορισμούς μπαταρίας</string>
+    <string name="unrestricted_on">Ενεργό</string>
+    <string name="unrestricted_off">Επίλεξε «Να επιτρέπεται»</string>
+
+    <string name="channel_monitor">Παρακολούθηση μπαταρίας</string>
+    <string name="channel_monitor_desc">Μόνιμη ειδοποίηση όσο τρέχει η παρακολούθηση</string>
+    <string name="channel_alerts">Ειδοποιήσεις μπαταρίας</string>
+    <string name="channel_alerts_desc">Ειδοποιήσεις όταν η μπαταρία φτάσει στα όρια που έχεις ορίσει</string>
+    <string name="monitor_title">Μπαταρία %1$d%%</string>
+    <string name="monitor_charging_target">Φορτίζει · ειδοποίηση στο %1$d%%</string>
+    <string name="monitor_battery_target">Σε μπαταρία · ειδοποίηση στο %1$d%%</string>
+    <string name="notif_charge_title">Η μπαταρία έφτασε στο %1$d%%</string>
+    <string name="notif_charge_text">Μπορείς να αποσυνδέσεις τον φορτιστή.</string>
+    <string name="notif_low_title">Χαμηλή μπαταρία: %1$d%%</string>
+    <string name="notif_low_text">Σύνδεσε τον φορτιστή.</string>
+    <string name="mute">Σίγαση</string>
+</resources>

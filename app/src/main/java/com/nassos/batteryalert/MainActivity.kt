@@ -2,6 +2,7 @@ package com.nassos.batteryalert
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -46,6 +47,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -66,6 +68,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
@@ -80,6 +83,10 @@ import com.nassos.batteryalert.ui.SectionTitle
 import com.nassos.batteryalert.ui.SheetOption
 
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(AppLanguage.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -184,6 +191,17 @@ fun MainScreen() {
         }
     }
 
+    fun setLanguage(tag: String) {
+        if (tag == AppLanguage.current(context)) return
+        prefs.language = tag
+        if (monitoring) {
+            // The service picks its language when created, so restart it to update its notification.
+            BatteryMonitorService.stop(context)
+            BatteryMonitorService.start(context)
+        }
+        (context as? Activity)?.recreate()
+    }
+
     // Sound picking: which alert the open sheet / pending picker result belongs to.
     var sheetFor by rememberSaveable { mutableStateOf<AlertKind?>(null) }
     var pickingFor by rememberSaveable { mutableStateOf<AlertKind?>(null) }
@@ -253,7 +271,7 @@ fun MainScreen() {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconBadge(R.drawable.ic_bolt, scheme.primary, scheme.onPrimary)
                         Text(
-                            "Battery Alert",
+                            stringResource(R.string.app_name),
                             style = MaterialTheme.typography.headlineMedium,
                             color = scheme.onSurface,
                             modifier = Modifier.padding(start = 14.dp),
@@ -261,7 +279,7 @@ fun MainScreen() {
                     }
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Ειδοποιήσεις επιπέδου μπαταρίας",
+                        stringResource(R.string.app_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
                         color = scheme.onSurfaceVariant,
                     )
@@ -273,9 +291,9 @@ fun MainScreen() {
                     )
                     Spacer(Modifier.height(8.dp))
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
-                        Pill(battery.plugLabel)
+                        Pill(stringResource(battery.plugLabel))
                         Pill("%.1f°C".format(battery.temperatureC))
-                        if (battery.full) Pill("Πλήρης")
+                        if (battery.full) Pill(stringResource(R.string.full))
                     }
                 }
             }
@@ -287,9 +305,9 @@ fun MainScreen() {
             if (monitoring && !notificationsOk) {
                 item {
                     WarningCard(
-                        "Οι ειδοποιήσεις είναι απενεργοποιημένες",
-                        "Χωρίς αυτές η εφαρμογή δεν μπορεί να σε ειδοποιήσει.",
-                        "Ενεργοποίηση",
+                        stringResource(R.string.notifications_off_title),
+                        stringResource(R.string.notifications_off_text),
+                        stringResource(R.string.enable),
                     ) {
                         context.safeStart(
                             Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
@@ -300,7 +318,7 @@ fun MainScreen() {
                 }
             }
 
-            item { SectionTitle("Ειδοποιήσεις") }
+            item { SectionTitle(stringResource(R.string.section_alerts)) }
             AlertKind.entries.forEach { kind ->
                 item(key = kind.key) {
                     val config = configs.getValue(kind)
@@ -317,11 +335,11 @@ fun MainScreen() {
                 }
             }
 
-            item { SectionTitle("Ήχος") }
+            item { SectionTitle(stringResource(R.string.section_sound)) }
             item {
                 SettingCard(
-                    "Ένταση ξυπνητηριού",
-                    "Οι ειδοποιήσεις ακούγονται με την ένταση του ξυπνητηριού, ακόμα και στο αθόρυβο.",
+                    stringResource(R.string.alarm_volume),
+                    stringResource(R.string.alarm_volume_desc),
                     alarmStream,
                 ) {
                     alarmStream = it
@@ -329,7 +347,10 @@ fun MainScreen() {
                 }
             }
 
-            item { SectionTitle("Αξιόπιστη λειτουργία (HyperOS)") }
+            item { SectionTitle(stringResource(R.string.section_language)) }
+            item { LanguageCard(AppLanguage.current(context), ::setLanguage) }
+
+            item { SectionTitle(stringResource(R.string.section_hyperos)) }
             item {
                 XiaomiCard(
                     unrestricted = unrestricted,
@@ -356,7 +377,7 @@ fun MainScreen() {
     sheetFor?.let { kind ->
         ModalBottomSheet(onDismissRequest = { sheetFor = null }, sheetState = rememberModalBottomSheetState()) {
             Text(
-                if (kind == AlertKind.CHARGE) "Ήχος φόρτισης" else "Ήχος χαμηλής μπαταρίας",
+                stringResource(if (kind == AlertKind.CHARGE) R.string.sound_charge else R.string.sound_low),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
@@ -364,24 +385,27 @@ fun MainScreen() {
                 sheetFor = null
                 action()
             }
-            SheetOption(R.drawable.ic_bell, "Ήχοι ειδοποιήσεων") {
-                pick { openRingtonePicker(kind, RingtoneManager.TYPE_NOTIFICATION, "Ήχοι ειδοποιήσεων") }
+            val notificationSounds = stringResource(R.string.sounds_notification)
+            val alarmSounds = stringResource(R.string.sounds_alarm)
+            val ringtones = stringResource(R.string.sounds_ringtone)
+            SheetOption(R.drawable.ic_bell, notificationSounds) {
+                pick { openRingtonePicker(kind, RingtoneManager.TYPE_NOTIFICATION, notificationSounds) }
             }
-            SheetOption(R.drawable.ic_alarm, "Ήχοι ξυπνητηριού") {
-                pick { openRingtonePicker(kind, RingtoneManager.TYPE_ALARM, "Ήχοι ξυπνητηριού") }
+            SheetOption(R.drawable.ic_alarm, alarmSounds) {
+                pick { openRingtonePicker(kind, RingtoneManager.TYPE_ALARM, alarmSounds) }
             }
-            SheetOption(R.drawable.ic_music, "Ήχοι κλήσης") {
-                pick { openRingtonePicker(kind, RingtoneManager.TYPE_RINGTONE, "Ήχοι κλήσης") }
+            SheetOption(R.drawable.ic_music, ringtones) {
+                pick { openRingtonePicker(kind, RingtoneManager.TYPE_RINGTONE, ringtones) }
             }
-            SheetOption(R.drawable.ic_folder, "Από αρχείο…", "Οποιοδήποτε αρχείο ήχου (MP3, OGG, …)") {
+            SheetOption(R.drawable.ic_folder, stringResource(R.string.sound_from_file), stringResource(R.string.sound_from_file_desc)) {
                 pick {
                     pickingFor = kind
                     fileLauncher.launch(arrayOf("audio/*"))
                 }
             }
             HorizontalDivider(Modifier.padding(vertical = 8.dp, horizontal = 24.dp))
-            SheetOption(null, "Προεπιλογή συστήματος") { pick { setSound(kind, null) } }
-            SheetOption(R.drawable.ic_bell_off, "Χωρίς ήχο") { pick { setSound(kind, "") } }
+            SheetOption(null, stringResource(R.string.sound_default)) { pick { setSound(kind, null) } }
+            SheetOption(R.drawable.ic_bell_off, stringResource(R.string.sound_none)) { pick { setSound(kind, "") } }
             Spacer(Modifier.height(24.dp))
         }
     }
@@ -401,11 +425,11 @@ private fun MonitoringCard(on: Boolean, onToggle: (Boolean) -> Unit) {
         Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(
-                    if (on) "Η παρακολούθηση είναι ενεργή" else "Η παρακολούθηση είναι ανενεργή",
+                    stringResource(if (on) R.string.monitoring_on else R.string.monitoring_off),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
-                    if (on) "Θα ειδοποιηθείς όταν η μπαταρία φτάσει στα όρια" else "Πάτησε για να ξεκινήσει",
+                    stringResource(if (on) R.string.monitoring_on_desc else R.string.monitoring_off_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = (if (on) scheme.onPrimary else scheme.onSurfaceVariant).copy(alpha = 0.85f),
                 )
@@ -465,19 +489,46 @@ private fun XiaomiCard(unrestricted: Boolean, onAutostart: () -> Unit, onBattery
             Row(Modifier.padding(horizontal = 20.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 IconBadge(R.drawable.ic_shield, scheme.secondaryContainer, scheme.onSecondaryContainer)
                 Text(
-                    "Το HyperOS κλείνει τις εφαρμογές στο παρασκήνιο. Κάνε αυτές τις δύο ρυθμίσεις μία φορά.",
+                    stringResource(R.string.hyperos_info),
                     style = MaterialTheme.typography.bodyMedium,
                     color = scheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 16.dp),
                 )
             }
-            ActionRow("Αυτόματη εκκίνηση", "Ενεργοποίησε το Battery Alert", done = false, onClick = onAutostart)
             ActionRow(
-                "Χωρίς περιορισμούς μπαταρίας",
-                if (unrestricted) "Ενεργό" else "Επίλεξε «Να επιτρέπεται»",
+                stringResource(R.string.autostart), stringResource(R.string.autostart_desc),
+                done = false, onClick = onAutostart,
+            )
+            ActionRow(
+                stringResource(R.string.unrestricted),
+                stringResource(if (unrestricted) R.string.unrestricted_on else R.string.unrestricted_off),
                 done = unrestricted,
                 onClick = onBattery,
             )
+        }
+    }
+}
+
+@Composable
+private fun LanguageCard(current: String, onSelect: (String) -> Unit) {
+    Card(
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+    ) {
+        Column(Modifier.padding(vertical = 8.dp)) {
+            listOf("el" to R.string.lang_el, "en" to R.string.lang_en).forEach { (tag, label) ->
+                Surface(onClick = { onSelect(tag) }, color = androidx.compose.ui.graphics.Color.Transparent) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(selected = tag == current, onClick = { onSelect(tag) })
+                        Text(stringResource(label), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
         }
     }
 }

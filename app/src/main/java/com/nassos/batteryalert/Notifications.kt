@@ -19,14 +19,14 @@ object Notifications {
     fun createChannels(context: Context) {
         val nm = context.getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(
-            NotificationChannel(CH_MONITOR, "Παρακολούθηση μπαταρίας", NotificationManager.IMPORTANCE_MIN).apply {
-                description = "Μόνιμη ειδοποίηση όσο τρέχει η παρακολούθηση"
+            NotificationChannel(CH_MONITOR, context.getString(R.string.channel_monitor), NotificationManager.IMPORTANCE_MIN).apply {
+                description = context.getString(R.string.channel_monitor_desc)
                 setShowBadge(false)
             }
         )
         nm.createNotificationChannel(
-            NotificationChannel(CH_ALERTS, "Ειδοποιήσεις μπαταρίας", NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "Ειδοποιήσεις όταν η μπαταρία φτάσει στα όρια που έχεις ορίσει"
+            NotificationChannel(CH_ALERTS, context.getString(R.string.channel_alerts), NotificationManager.IMPORTANCE_HIGH).apply {
+                description = context.getString(R.string.channel_alerts_desc)
                 // Sound and vibration are handled by AlertSound so the user can pick any sound.
                 setSound(null, null)
                 enableVibration(false)
@@ -44,14 +44,14 @@ object Notifications {
         val charge = prefs.config(AlertKind.CHARGE)
         val low = prefs.config(AlertKind.LOW)
         val text = when {
-            plugged && charge.enabled -> "Φορτίζει · ειδοποίηση στο ${charge.target}%"
-            plugged -> "Φορτίζει"
-            low.enabled -> "Σε μπαταρία · ειδοποίηση στο ${low.target}%"
-            else -> "Σε μπαταρία"
+            plugged && charge.enabled -> context.getString(R.string.monitor_charging_target, charge.target)
+            plugged -> context.getString(R.string.charging)
+            low.enabled -> context.getString(R.string.monitor_battery_target, low.target)
+            else -> context.getString(R.string.on_battery)
         }
         return NotificationCompat.Builder(context, CH_MONITOR)
             .setSmallIcon(R.drawable.ic_bolt)
-            .setContentTitle("Μπαταρία $level%")
+            .setContentTitle(context.getString(R.string.monitor_title, level))
             .setContentText(text)
             .setOngoing(true)
             .setSilent(true)
@@ -63,8 +63,10 @@ object Notifications {
 
     fun alert(context: Context, kind: AlertKind, level: Int): Notification {
         val (title, text) = when (kind) {
-            AlertKind.CHARGE -> "Η μπαταρία έφτασε στο $level%" to "Μπορείς να αποσυνδέσεις τον φορτιστή."
-            AlertKind.LOW -> "Χαμηλή μπαταρία: $level%" to "Σύνδεσε τον φορτιστή."
+            AlertKind.CHARGE ->
+                context.getString(R.string.notif_charge_title, level) to context.getString(R.string.notif_charge_text)
+            AlertKind.LOW ->
+                context.getString(R.string.notif_low_title, level) to context.getString(R.string.notif_low_text)
         }
         val stopSound = PendingIntent.getBroadcast(
             context, kind.ordinal,
@@ -80,7 +82,7 @@ object Notifications {
             .setAutoCancel(true)
             .setContentIntent(openAppIntent(context))
             .setDeleteIntent(stopSound)
-            .addAction(0, "Σίγαση", stopSound)
+            .addAction(0, context.getString(R.string.mute), stopSound)
             .build()
     }
 }

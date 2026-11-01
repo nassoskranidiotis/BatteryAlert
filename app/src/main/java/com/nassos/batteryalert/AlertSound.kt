@@ -72,13 +72,13 @@ object AlertSound {
 
     /** Human-readable name for a stored sound value (see [AlertConfig.sound]). */
     fun title(context: Context, sound: String?): String = when (sound) {
-        null -> "Προεπιλογή συστήματος"
-        "" -> "Χωρίς ήχο"
+        null -> context.getString(R.string.sound_default)
+        "" -> context.getString(R.string.sound_none)
         else -> {
             val uri = Uri.parse(sound)
             displayName(context, uri)
                 ?: runCatching { RingtoneManager.getRingtone(context, uri)?.getTitle(context) }.getOrNull()
-                ?: "Προσαρμοσμένος ήχος"
+                ?: context.getString(R.string.sound_custom)
         }
     }
 
